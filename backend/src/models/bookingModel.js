@@ -3,12 +3,12 @@ const mongoose=require("mongoose");
 const bookingSchema=new mongoose.Schema({
     roomId:{
         type:mongoose.Schema.Types.ObjectId ,
-        ref:'Rooms',
+        ref:'Room',
         required:true
     },
     customerId:{
-        type:mongoos.Schema.Types.ObjectId,
-        ref:'Customers',
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Customer',
         required:true
     },
     checkInDate:{
@@ -31,8 +31,8 @@ const bookingSchema=new mongoose.Schema({
         enum:['confirmed','checked-in','checked-out','cancelled']
     },
     createdBy:{
-        type:mongoose.Schema.type.ObjectId,
-        ref:'Users'
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User'
     }
 },{
     timestamps:true

@@ -1,4 +1,3 @@
-const fast2sms = require("fast-two-sms");
 const otplib = require("otplib");
 const axios=require("axios");
 

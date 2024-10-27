@@ -3,7 +3,7 @@ const mongoose=require("mongoose");
 const paymentSchema=new mongoose.Schema({
     bookingId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Bookings',
+        ref:'Booking',
         required:true
     },
     amount:{
@@ -19,7 +19,7 @@ const paymentSchema=new mongoose.Schema({
     },
     status:{
         type:String,
-        enum:['pending','completed','failed'],
+        enum:['pending','completed','failed','refunded'],
         required:true
     },
     paidAt:{
@@ -29,3 +29,7 @@ const paymentSchema=new mongoose.Schema({
 {
     timestamps:true
 })
+
+const Payment=new mongoose.model("Payment",paymentSchema);
+
+module.exports=Payment;

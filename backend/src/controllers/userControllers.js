@@ -98,12 +98,16 @@ exports.login = async (req, res) => {
       const options = {
         expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
         httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', 
+        sameSite: 'strict' 
       };
-      res.cookie("token", token, options).status(200).json({
+      res.cookie('token', token, options).status(200).json({
         success: true,
         token,
-        user: userExist,
+        user: userExist
       });
+      
+      
     } else {
       return res.status(401).json({
         success: false,
@@ -119,12 +123,13 @@ exports.login = async (req, res) => {
 };
 
 exports.getUserProfile = async (req, res) => {
+    console.log(req.user);
   try {
     const user = await User.findById(req.user.id).select("-password");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.json(user);
+    res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }

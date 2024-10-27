@@ -44,58 +44,6 @@ exports.createRoom=async (req,res)=>{
 
 //Get all rooms
 
-exports.getAllRooms = async (req, res) => {
-    try {
-      // Pagination
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 10;
-      const skip = (page - 1) * limit;
-  
-      // Filtering
-      const filter = {};
-      if (req.query.type) filter.type = req.query.type;
-      if (req.query.status) filter.status = req.query.status;
-      if (req.query.minPrice) filter.pricePerNight = { $gte: parseInt(req.query.minPrice) };
-      if (req.query.maxPrice) {
-        filter.pricePerNight = { ...filter.pricePerNight, $lte: parseInt(req.query.maxPrice) };
-      }
-  
-      // Sorting
-      const sort = {};
-      if (req.query.sortBy) {
-        const parts = req.query.sortBy.split(':');
-        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1;
-      }
-  
-      // Fetch rooms
-      const rooms = await Room.find(filter)
-        .sort(sort)
-        .skip(skip)
-        .limit(limit);
-  
-      // Get total count for pagination
-      const total = await Room.countDocuments(filter);
-  
-      // Send response
-      res.status(200).json({
-        status: 'success',
-        data: {
-          rooms,
-          currentPage: page,
-          totalPages: Math.ceil(total / limit),
-          totalResults: total,
-        },
-      });
-    } catch (error) {
-      res.status(500).json({
-        status: 'error',
-        message: 'An error occurred while fetching rooms',
-        error: error.message,
-      });
-    }
-  };
-
-
   exports.getAllRooms = async (req, res) => {
     try {
       const page = parseInt(req.query.page) || 1;
@@ -103,7 +51,7 @@ exports.getAllRooms = async (req, res) => {
       const skip = (page - 1) * limit;
   
       const filter = {};
-      if (req.query.type) filter.type = req.query.type;
+      if (req.query.category) filter.category = req.query.category;
       if (req.query.status) filter.status = req.query.status;
       if (req.query.minPrice) filter.pricePerNight = { $gte: parseInt(req.query.minPrice) };
       if (req.query.maxPrice) {
@@ -183,13 +131,13 @@ exports.getAllRooms = async (req, res) => {
 
   exports.getAvailableRooms = async (req, res) => {
     try {
-      const { startDate, endDate, type } = req.query;
+      const { startDate, endDate, category } = req.query;
   
       const filter = {
         status: 'available'
       };
   
-      if (type) filter.type = type;
+      if (category) filter.category = category;
   
       
       const availableRooms = await Room.find(filter);
